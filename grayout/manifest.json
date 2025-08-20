@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Grayed Out",
-  "version": "0.0.0.1",
+  "version": "0.0.0.2",
   "description": "Schedule or Always grayscale websites to reduce distractions",
   "permissions": [
     "storage",
