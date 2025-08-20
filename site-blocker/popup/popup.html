@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1>GrayedOut</h1>
+
+    <div class="section">
+      <h2>Quick Add Site</h2>
+      <div class="input-group">
+        <input type="text" id="site-input" placeholder="e.g., facebook.com">
+        <button id="add-site">Add</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Block Mode</h2>
+      <div class="radio-group">
+        <label>
+          <input type="radio" name="mode" value="always" id="mode-always">
+          <span>Always Block</span>
+        </label>
+        <label>
+          <input type="radio" name="mode" value="scheduled" id="mode-scheduled">
+          <span>Scheduled</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="section" id="schedule-section">
+      <h2>Schedule</h2>
+      <div class="time-inputs">
+        <div class="time-group">
+          <label for="start-time">Start:</label>
+          <input type="time" id="start-time" value="09:00">
+        </div>
+        <div class="time-group">
+          <label for="end-time">End:</label>
+          <input type="time" id="end-time" value="17:00">
+        </div>
+      </div>
+      <div class="days">
+        <label><input type="checkbox" value="mon" checked> Mon</label>
+        <label><input type="checkbox" value="tue" checked> Tue</label>
+        <label><input type="checkbox" value="wed" checked> Wed</label>
+        <label><input type="checkbox" value="thu" checked> Thu</label>
+        <label><input type="checkbox" value="fri" checked> Fri</label>
+        <label><input type="checkbox" value="sat"> Sat</label>
+        <label><input type="checkbox" value="sun"> Sun</label>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Blocked Sites</h2>
+      <div id="sites-list" class="sites-list"></div>
+    </div>
+
+    <div class="footer">
+      <button id="save-btn" class="save-btn">Save Settings</button>
+      <a href="#" id="options-link">More Options</a>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

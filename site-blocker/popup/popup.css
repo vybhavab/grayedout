@@ -1,0 +1,180 @@
+body {
+  width: 350px;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  background: #f5f5f5;
+}
+
+.container {
+  padding: 16px;
+}
+
+h1 {
+  margin: 0 0 16px 0;
+  font-size: 20px;
+  color: #333;
+  text-align: center;
+}
+
+h2 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #666;
+  font-weight: 600;
+}
+
+.section {
+  background: white;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.input-group {
+  display: flex;
+  gap: 8px;
+}
+
+#site-input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+#add-site {
+  padding: 8px 16px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#add-site:hover {
+  background: #45a049;
+}
+
+.radio-group {
+  display: flex;
+  gap: 16px;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.time-inputs {
+  display: grid;
+  grid-template-columns: 2fr 2fr;
+  gap: 8px;
+}
+
+.time-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.time-group label {
+  font-size: 14px;
+  color: #666;
+}
+
+.time-group input[type="time"] {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.days {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.days label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.sites-list {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.site-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background: #f9f9f9;
+  border-radius: 4px;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.site-item button {
+  padding: 4px 8px;
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.site-item button:hover {
+  background: #da190b;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.save-btn {
+  padding: 10px 20px;
+  background: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.save-btn:hover {
+  background: #1976D2;
+}
+
+#options-link {
+  color: #666;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+#options-link:hover {
+  text-decoration: underline;
+}
+
+#schedule-section {
+  display: none;
+}
+
+#schedule-section.visible {
+  display: block;
+}
