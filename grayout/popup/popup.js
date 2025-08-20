@@ -6,14 +6,32 @@ let settings = {
     startTime: '09:00',
     endTime: '17:00',
     days: ['mon', 'tue', 'wed', 'thu', 'fri']
+  },
+  break: {
+    active: false,
+    until: 0,
+    scope: 'global',
+    site: null
   }
 };
+
+let breakTimerId = null;
 
 async function loadSettings() {
   const stored = await chrome.storage.sync.get('settings');
   if (stored.settings) {
     settings = stored.settings;
   }
+  // Update site label subtitle if possible
+  try {
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+    const tab = tabs[0];
+    if (tab && tab.url) {
+      const d = normalizeDomain(tab.url);
+      const labelSpan = document.querySelector('#break-site-label span');
+      if (labelSpan) labelSpan.textContent = `This site (${d})`;
+    }
+  } catch {}
   updateUI();
 }
 
@@ -36,6 +54,7 @@ function updateUI() {
   });
   
   renderSitesList();
+  updateBreakUI();
 }
 
 function renderSitesList() {
@@ -111,6 +130,83 @@ function shouldBlockSite(url) {
   if (!url) return false;
   const domain = normalizeDomain(url);
   return settings.blockedSites.some(site => domain.includes(normalizeDomain(site)));
+}
+
+async function getCurrentTabDomain() {
+  try {
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+    const tab = tabs[0];
+    if (!tab || !tab.url) return null;
+    return normalizeDomain(tab.url);
+  } catch {
+    return null;
+  }
+}
+
+function formatRemaining(ms) {
+  if (ms <= 0) return 'ending now';
+  const totalSec = Math.floor(ms / 1000);
+  const m = Math.floor(totalSec / 60);
+  const s = totalSec % 60;
+  if (m >= 1) return `${m}m ${s.toString().padStart(2, '0')}s left`;
+  return `${s}s left`;
+}
+
+function updateBreakUI() {
+  const statusEl = document.getElementById('break-status');
+  const cancelBtn = document.getElementById('cancel-break');
+  const startBtn = document.getElementById('start-break');
+  const scopeGlobal = document.getElementById('break-global');
+  const scopeSite = document.getElementById('break-site');
+  const chip = document.getElementById('break-chip');
+  const chipText = document.getElementById('break-chip-text');
+
+  if (settings.break?.active && settings.break.until > Date.now()) {
+    const remaining = settings.break.until - Date.now();
+    const scopeText = settings.break.scope === 'global' ? 'everywhere' : `on ${settings.break.site}`;
+    statusEl.textContent = `Break active ${scopeText} — ${formatRemaining(remaining)}`;
+    statusEl.style.display = 'block';
+    cancelBtn.style.display = 'inline-block';
+    startBtn.disabled = true;
+    scopeGlobal.disabled = true;
+    scopeSite.disabled = true;
+
+    // Show/update chip
+    if (chip && chipText) {
+      chip.style.display = 'inline-flex';
+      chipText.textContent = formatRemaining(remaining).replace(' left','');
+    }
+
+    // Start ticking
+    if (!breakTimerId) {
+      breakTimerId = setInterval(() => {
+        const now = Date.now();
+        const remain = settings.break.until - now;
+        if (remain <= 0) {
+          clearInterval(breakTimerId);
+          breakTimerId = null;
+          // Clear local state and persist; background alarm also handles this
+          settings.break = { active: false, until: 0, scope: 'global', site: null };
+          saveSettings();
+          updateBreakUI();
+          return;
+        }
+        if (chipText) chipText.textContent = formatRemaining(remain).replace(' left','');
+        statusEl.textContent = `Break active ${scopeText} — ${formatRemaining(remain)}`;
+      }, 1000);
+    }
+  } else {
+    statusEl.style.display = 'none';
+    cancelBtn.style.display = 'none';
+    startBtn.disabled = false;
+    scopeGlobal.disabled = false;
+    scopeSite.disabled = false;
+    if (chip) chip.style.display = 'none';
+    if (breakTimerId) {
+      clearInterval(breakTimerId);
+      breakTimerId = null;
+    }
+  }
 }
 
 document.getElementById('add-site').addEventListener('click', () => {
@@ -199,3 +295,28 @@ document.getElementById('options-link').addEventListener('click', (e) => {
 });
 
 loadSettings();
+
+// Break controls
+document.getElementById('start-break').addEventListener('click', async () => {
+  const mins = parseInt(document.getElementById('break-mins').value, 10) || 15;
+  const scope = document.querySelector('input[name="break-scope"]:checked')?.value || 'global';
+  const now = Date.now();
+  const until = now + mins * 60 * 1000;
+  let site = null;
+  if (scope === 'site') {
+    site = await getCurrentTabDomain();
+    if (!site) {
+      // Fall back to global if current domain cannot be read
+      settings.break.scope = 'global';
+    }
+  }
+  settings.break = { active: true, until, scope, site };
+  await saveSettings();
+  updateBreakUI();
+});
+
+document.getElementById('cancel-break').addEventListener('click', async () => {
+  settings.break = { active: false, until: 0, scope: 'global', site: null };
+  await saveSettings();
+  updateBreakUI();
+});

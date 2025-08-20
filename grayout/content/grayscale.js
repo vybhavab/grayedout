@@ -44,38 +44,31 @@ function applyGrayscale() {
     }
 
     body::before {
-      content: "You've been grayed out";
+      content: "Grayout active";
       position: fixed;
-      top: 20px;
-      right: 20px;
-      background: rgba(0, 0, 0, 0.8);
-      color: white;
-      padding: 12px 20px;
-      border-radius: 8px;
+      right: 18px;
+      bottom: 18px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(17, 24, 39, 0.72);
+      color: #e5e7eb;
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 10px 30px rgba(2, 6, 23, 0.35);
+      backdrop-filter: saturate(140%) blur(6px);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 14px;
-      z-index: 999999;
-      animation: slideInOut 3.5s ease-out forwards;
+      font-size: 12px;
+      letter-spacing: 0.2px;
+      z-index: 2147483647;
+      animation: grayout-chip-in 380ms ease-out, grayout-chip-out 420ms ease-in 3s forwards;
       pointer-events: none;
     }
 
-    @keyframes slideInOut {
-      0% {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-      10% {
-        transform: translateX(0);
-        opacity: 1;
-      }
-      85% {
-        transform: translateX(0);
-        opacity: 1;
-      }
-      100% {
-        transform: translateX(100%);
-        opacity: 0;
-      }
+    @keyframes grayout-chip-in {
+      from { transform: translateY(8px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes grayout-chip-out {
+      to { transform: translateY(8px); opacity: 0; }
     }
   `;
 
@@ -108,6 +101,7 @@ async function checkBlockStatus() {
         endTime: "17:00",
         days: ["mon", "tue", "wed", "thu", "fri"],
       },
+      break: { active: false, until: 0, scope: "global", site: null },
     };
 
     const currentDomain = normalizeDomain(window.location.href);
@@ -118,6 +112,17 @@ async function checkBlockStatus() {
     if (!isBlockedSite) {
       removeGrayscale();
       return;
+    }
+
+    // Honor active break
+    if (settings.break?.active && settings.break.until > Date.now()) {
+      if (
+        settings.break.scope === "global" ||
+        (settings.break.scope === "site" && settings.break.site && currentDomain.includes(normalizeDomain(settings.break.site)))
+      ) {
+        removeGrayscale();
+        return;
+      }
     }
 
     if (settings.blockMode === "always") {

@@ -7,6 +7,12 @@ const DEFAULT_SETTINGS = {
     endTime: "17:00",
     days: ["mon", "tue", "wed", "thu", "fri"],
   },
+  break: {
+    active: false,
+    until: 0, // ms epoch
+    scope: "global", // 'global' | 'site'
+    site: null, // domain when scope is 'site'
+  },
 };
 
 function getNextAlarmTime(timeStr, days) {
@@ -32,11 +38,16 @@ function getNextAlarmTime(timeStr, days) {
 async function scheduleAlarms() {
   await chrome.alarms.clear("blockStart");
   await chrome.alarms.clear("blockEnd");
+  await chrome.alarms.clear("breakEnd");
 
   const stored = await chrome.storage.sync.get("settings");
   const settings = stored.settings || DEFAULT_SETTINGS;
 
   if (settings.blockMode !== "scheduled") {
+    // Still schedule break alarm if needed
+    if (settings.break?.active && settings.break.until > Date.now()) {
+      chrome.alarms.create("breakEnd", { when: settings.break.until });
+    }
     return;
   }
 
@@ -50,6 +61,11 @@ async function scheduleAlarms() {
   const nextEnd = getNextAlarmTime(endTime, days);
   if (nextEnd) {
     chrome.alarms.create("blockEnd", { when: nextEnd });
+  }
+
+  // Break alarm
+  if (settings.break?.active && settings.break.until > Date.now()) {
+    chrome.alarms.create("breakEnd", { when: settings.break.until });
   }
 }
 
@@ -73,6 +89,18 @@ chrome.runtime.onInstalled.addListener(async () => {
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name === "blockStart" || alarm.name === "blockEnd") {
+    await notifyAllTabs();
+    await scheduleAlarms();
+  }
+  if (alarm.name === "breakEnd") {
+    const stored = await chrome.storage.sync.get("settings");
+    const settings = stored.settings || DEFAULT_SETTINGS;
+    if (settings.break?.active && settings.break.until <= Date.now()) {
+      settings.break.active = false;
+      settings.break.until = 0;
+      settings.break.site = null;
+      await chrome.storage.sync.set({ settings });
+    }
     await notifyAllTabs();
     await scheduleAlarms();
   }

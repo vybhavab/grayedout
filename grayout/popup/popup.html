@@ -1,69 +1,112 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="popup.css">
-</head>
-<body>
-  <div class="container">
-    <h1>Grayed Out</h1>
-
-    <div class="section">
-      <h2>Quick Add Site</h2>
-      <div class="input-group">
-        <input type="text" id="site-input" placeholder="e.g., x.com, instagram.com">
-        <button id="add-site">Add Site</button>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>Block Mode</h2>
-      <div class="radio-group">
-        <label>
-          <input type="radio" name="mode" value="always" id="mode-always">
-          <span>Always Block</span>
-        </label>
-        <label>
-          <input type="radio" name="mode" value="scheduled" id="mode-scheduled">
-          <span>Scheduled</span>
-        </label>
-      </div>
-    </div>
-
-    <div class="section" id="schedule-section">
-      <h2>Schedule Settings</h2>
-      <div class="time-inputs">
-        <div class="time-group">
-          <label for="start-time">Start Time</label>
-          <input type="time" id="start-time" value="09:00">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Grayed Out</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="header">
+        <div class="brand">
+          <img src="../icons/icon-128.png" alt="Grayed Out" class="logo" />
+          <div class="titles">
+            <h1>Grayed Out</h1>
+            <p class="subtitle">Stay in flow. Color on break.</p>
+          </div>
         </div>
-        <div class="time-group">
-          <label for="end-time">End Time</label>
-          <input type="time" id="end-time" value="17:00">
+        <button id="save-btn" class="btn primary">Save & Close</button>
+      </header>
+
+      <section class="card">
+        <h2 class="section-title">Focus Mode</h2>
+        <div class="segmented">
+          <label class="seg-item">
+            <input type="radio" name="mode" id="mode-always" value="always" />
+            <span>Always</span>
+          </label>
+          <label class="seg-item">
+            <input type="radio" name="mode" id="mode-scheduled" value="scheduled" />
+            <span>Scheduled</span>
+          </label>
         </div>
-      </div>
-      <div class="days">
-        <label><input type="checkbox" value="mon" checked> Mon</label>
-        <label><input type="checkbox" value="tue" checked> Tue</label>
-        <label><input type="checkbox" value="wed" checked> Wed</label>
-        <label><input type="checkbox" value="thu" checked> Thu</label>
-        <label><input type="checkbox" value="fri" checked> Fri</label>
-        <label><input type="checkbox" value="sat"> Sat</label>
-        <label><input type="checkbox" value="sun"> Sun</label>
-      </div>
+
+        <div id="schedule-section" class="schedule">
+          <div class="row times">
+            <div class="field time">
+              <label for="start-time">Start</label>
+              <input type="time" id="start-time" />
+            </div>
+            <div class="field time">
+              <label for="end-time">End</label>
+              <input type="time" id="end-time" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="field full">
+              <label>Days</label>
+              <div class="days">
+                <label class="day"><input type="checkbox" value="mon" />Mon</label>
+                <label class="day"><input type="checkbox" value="tue" />Tue</label>
+                <label class="day"><input type="checkbox" value="wed" />Wed</label>
+                <label class="day"><input type="checkbox" value="thu" />Thu</label>
+                <label class="day"><input type="checkbox" value="fri" />Fri</label>
+                <label class="day"><input type="checkbox" value="sat" />Sat</label>
+                <label class="day"><input type="checkbox" value="sun" />Sun</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="break-header">
+          <h2 class="section-title">Break</h2>
+          <div id="break-chip" class="chip" style="display:none">
+            <span id="break-chip-text">15m</span>
+          </div>
+        </div>
+        <p id="break-status" class="muted" style="display:none"></p>
+        <div class="row">
+          <div class="field">
+            <label for="break-mins">Duration (minutes)</label>
+            <input id="break-mins" type="number" min="1" max="120" step="1" value="15" />
+          </div>
+          <div class="field">
+            <label>Scope</label>
+            <div class="scope">
+              <label class="radio">
+                <input type="radio" name="break-scope" id="break-global" value="global" checked />
+                <span>Everywhere</span>
+              </label>
+              <label class="radio" id="break-site-label">
+                <input type="radio" name="break-scope" id="break-site" value="site" />
+                <span>This site</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="row actions">
+          <button id="start-break" class="btn">Start Break</button>
+          <button id="cancel-break" class="btn danger" style="display:none">Cancel Break</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 class="section-title">Blocked Sites</h2>
+        <div class="row add-site">
+          <input id="site-input" type="text" placeholder="example.com" />
+          <button id="add-site" class="btn">Add</button>
+        </div>
+        <div id="sites-list" class="sites-list"></div>
+      </section>
+
+      <footer class="footer">
+        <a id="options-link" href="#">Open advanced options</a>
+      </footer>
     </div>
 
-    <div class="section">
-      <h2>Blocked Sites</h2>
-      <div id="sites-list" class="sites-list"></div>
-    </div>
-
-    <div class="footer">
-      <button id="save-btn" class="save-btn">Save Settings</button>
-      <a href="#" id="options-link">More Options</a>
-    </div>
-  </div>
-
-  <script src="popup.js"></script>
-</body>
-</html>
+    <script src="popup.js"></script>
+  </body>
+  </html>

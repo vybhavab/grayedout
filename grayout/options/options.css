@@ -299,3 +299,78 @@ button {
 .site-list::-webkit-scrollbar-thumb:hover {
   background: #9ca3af;
 }
+
+/* === Theme tokens and polished overrides === */
+:root {
+  --bg: #0b1220;
+  --surface: #0f172a;
+  --surface-2: #111827;
+  --text: #e5e7eb;
+  --muted: #9aa3b2;
+  --brand: #7c9eff;
+  --brand-600: #567dff;
+  --brand-700: #3b66ff;
+  --border: rgba(255, 255, 255, 0.08);
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(2, 6, 23, 0.6);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f6f7fb;
+    --surface: #ffffff;
+    --surface-2: #ffffff;
+    --text: #0f172a;
+    --muted: #64748b;
+    --brand: #3b82f6;
+    --brand-600: #2563eb;
+    --brand-700: #1d4ed8;
+    --border: #e5e7eb;
+    --shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
+  }
+}
+
+body { background: var(--bg); color: var(--text); }
+.header h1 { color: var(--text); }
+.subtitle { color: var(--muted); }
+
+.section {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)), var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+textarea {
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+}
+textarea::placeholder { color: var(--muted); }
+textarea:focus { border-color: color-mix(in oklab, var(--brand) 60%, var(--border)); box-shadow: 0 0 0 4px color-mix(in oklab, var(--brand) 20%, transparent); }
+
+.site-list { border: 1px solid var(--border); background: var(--surface-2); }
+.site-item { background: transparent; border: 1px solid var(--border); }
+.site-name { color: var(--text); }
+
+button.primary-btn {
+  background: linear-gradient(180deg, var(--brand), var(--brand-600));
+  color: white;
+  box-shadow: 0 10px 18px rgba(59,130,246,0.25);
+}
+button.primary-btn:hover { transform: translateY(-1px); background: linear-gradient(180deg, var(--brand-600), var(--brand-700)); }
+
+button.secondary-btn { background: rgba(148,163,184,0.25); color: var(--text); }
+button.secondary-btn:hover { background: rgba(148,163,184,0.35); }
+
+button.success-btn { background: #059669; }
+button.success-btn:hover { background: #047857; }
+
+.help-text { color: var(--muted); background: rgba(148,163,184,0.10); border-left-color: var(--border); }
+
+.stat-card { border: 1px solid var(--border); background: var(--surface-2); }
+.stat-value { color: var(--brand); }
+.stat-label { color: var(--muted); }
+
+.message.success { background: rgba(34,197,94,0.10); color: #22c55e; border-color: rgba(34,197,94,0.25); }
+.message.error { background: rgba(239,68,68,0.10); color: #ef4444; border-color: rgba(239,68,68,0.25); }
