@@ -67,6 +67,28 @@ function renderSitesList() {
   });
 }
 
+function isValidDomain(domain) {
+  if (!domain || typeof domain !== 'string') return false;
+  
+  domain = domain.trim().toLowerCase();
+  
+  const cleanDomain = domain
+    .replace(/^(https?:\/\/)?(www\.)?/, '')
+    .replace(/\/.*$/, '')
+    .replace(/:\d+$/, '');
+  
+  if (!cleanDomain) return false;
+  
+  const parts = cleanDomain.split('.');
+  if (parts.length < 2) return false;
+  
+  return parts.every(part => 
+    part.length > 0 && 
+    part.length <= 63 && 
+    /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/.test(part)
+  );
+}
+
 function normalizeDomain(url) {
   url = url.trim().toLowerCase();
   url = url.replace(/^(https?:\/\/)?(www\.)?/, '');
@@ -93,14 +115,43 @@ function shouldBlockSite(url) {
 
 document.getElementById('add-site').addEventListener('click', () => {
   const input = document.getElementById('site-input');
-  const site = normalizeDomain(input.value);
+  const rawInput = input.value.trim();
   
-  if (site && !settings.blockedSites.includes(site)) {
-    settings.blockedSites.push(site);
-    input.value = '';
-    renderSitesList();
-    saveSettings();
+  if (!rawInput) {
+    input.classList.add('error');
+    setTimeout(() => input.classList.remove('error'), 2000);
+    return;
   }
+  
+  if (!isValidDomain(rawInput)) {
+    input.classList.add('error');
+    input.placeholder = 'Invalid domain format';
+    setTimeout(() => {
+      input.classList.remove('error');
+      input.placeholder = 'example.com';
+    }, 2000);
+    return;
+  }
+  
+  const site = normalizeDomain(rawInput);
+  
+  if (settings.blockedSites.includes(site)) {
+    input.classList.add('error');
+    input.value = '';
+    input.placeholder = 'Site already blocked';
+    setTimeout(() => {
+      input.classList.remove('error');
+      input.placeholder = 'example.com';
+    }, 2000);
+    return;
+  }
+  
+  settings.blockedSites.push(site);
+  input.value = '';
+  input.classList.add('success');
+  setTimeout(() => input.classList.remove('success'), 500);
+  renderSitesList();
+  saveSettings();
 });
 
 document.getElementById('site-input').addEventListener('keypress', (e) => {

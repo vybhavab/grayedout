@@ -40,6 +40,42 @@ function applyGrayscale() {
     html {
       filter: grayscale(100%) !important;
       -webkit-filter: grayscale(100%) !important;
+      transition: filter 0.5s ease-in-out;
+    }
+
+    body::before {
+      content: "You've been grayed out";
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 14px;
+      z-index: 999999;
+      animation: slideInOut 3.5s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes slideInOut {
+      0% {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      10% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      85% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(100%);
+        opacity: 0;
+      }
     }
   `;
 
@@ -100,14 +136,31 @@ async function checkBlockStatus() {
 
 checkBlockStatus();
 
-chrome.runtime.onMessage.addListener((request, _sender, _sendResponse) => {
-  if (request.action === "updateBlockStatus") {
+let messageListener = null;
+let domListener = null;
+
+function setupListeners() {
+  if (messageListener) {
+    chrome.runtime.onMessage.removeListener(messageListener);
+  }
+
+  messageListener = (request, _sender, _sendResponse) => {
+    if (request.action === "updateBlockStatus") {
+      checkBlockStatus();
+    }
+  };
+
+  chrome.runtime.onMessage.addListener(messageListener);
+
+  if (document.readyState === "loading") {
+    if (domListener) {
+      document.removeEventListener("DOMContentLoaded", domListener);
+    }
+    domListener = checkBlockStatus;
+    document.addEventListener("DOMContentLoaded", domListener, { once: true });
+  } else {
     checkBlockStatus();
   }
-});
-
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", checkBlockStatus);
-} else {
-  checkBlockStatus();
 }
+
+setupListeners();

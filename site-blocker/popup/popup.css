@@ -49,6 +49,7 @@ h2 {
   border-radius: 4px;
   font-size: 14px;
   background: #ffffff;
+  transition: all 0.3s ease;
 }
 
 #site-input:focus {
@@ -59,6 +60,23 @@ h2 {
 
 #site-input::placeholder {
   color: #9ca3af;
+}
+
+#site-input.error {
+  border-color: #ff4444;
+  background-color: #fff5f5;
+  animation: shake 0.3s;
+}
+
+#site-input.success {
+  border-color: #4CAF50;
+  background-color: #f5fff5;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
 }
 
 #add-site {
