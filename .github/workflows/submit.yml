@@ -1,12 +1,15 @@
 name: "Package"
 on:
   push:
-    branches: [main]
+    tags:
+      - "v*"
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -18,7 +21,7 @@ jobs:
           node-version: latest
           cache: "pnpm"
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm ci
       - name: Build the extension
         run: pnpm build
       - name: Package the extension into a zip artifact
@@ -26,9 +29,6 @@ jobs:
       - name: Create GitHub Release with zip files
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{ github.run_number }}
-          name: Release v${{ github.run_number }}
-          target_commitish: ${{ github.sha }}
           files: build/*.zip
           generate_release_notes: true
         env:
