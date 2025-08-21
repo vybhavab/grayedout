@@ -1,5 +1,7 @@
-name: "Submit to Web Store"
+name: "Package"
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -27,24 +29,12 @@ jobs:
         run: pnpm build
       - name: Package the extension into a zip artifact
         run: pnpm package
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create GitHub Release with zip files
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ github.run_number }}
-          release_name: Release v${{ github.run_number }}
-          draft: false
-          prerelease: false
-      - name: Find and upload zip files from build directory
-        run: |
-          for zip_file in build/*.zip; do
-            if [ -f "$zip_file" ]; then
-              echo "Uploading $zip_file"
-              curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                   -H "Content-Type: application/zip" \
-                   --data-binary @"$zip_file" \
-                   "${{ steps.create_release.outputs.upload_url }}?name=$(basename $zip_file)&label=$(basename $zip_file)"
-            fi
-          done
+          name: Release v${{ github.run_number }}
+          files: build/*.zip
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
