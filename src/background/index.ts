@@ -87,27 +87,27 @@ async function scheduleAlarms() {
 }
 
 async function notifyAllTabs() {
-    const tabs = await chrome.tabs.query({});
-    for (const tab of tabs) {
-        if (!tab.id) continue;
-        const url = tab.url || "";
-        if (!/^https?:/i.test(url)) continue; // skip chrome://, edge://, about:, etc.
-        let delivered = false;
-        try {
-            await chrome.tabs.sendMessage(tab.id, { action: "updateBlockStatus" });
-            delivered = true;
-        } catch {}
-        if (!delivered) {
-            try {
-                // Ensure content script exists on already-open tabs
-                await chrome.scripting.executeScript({
-                    target: { tabId: tab.id },
-                    files: ["src/content/grayscale.ts"],
-                });
-                await chrome.tabs.sendMessage(tab.id, { action: "updateBlockStatus" });
-            } catch {}
-        }
-    }
+	const tabs = await chrome.tabs.query({});
+	for (const tab of tabs) {
+		if (!tab.id) continue;
+		const url = tab.url || "";
+		if (!/^https?:/i.test(url)) continue; // skip chrome://, edge://, about:, etc.
+		let delivered = false;
+		try {
+			await chrome.tabs.sendMessage(tab.id, { action: "updateBlockStatus" });
+			delivered = true;
+		} catch {}
+		if (!delivered) {
+			try {
+				// Ensure content script exists on already-open tabs
+				await chrome.scripting.executeScript({
+					target: { tabId: tab.id },
+					files: ["src/content/grayscale.ts"],
+				});
+				await chrome.tabs.sendMessage(tab.id, { action: "updateBlockStatus" });
+			} catch {}
+		}
+	}
 }
 
 chrome.runtime.onInstalled.addListener(async () => {
