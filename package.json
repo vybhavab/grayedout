@@ -1,7 +1,7 @@
 {
   "name": "grayed-out",
   "displayName": "Grayed out",
-  "version": "0.0.0.6",
+  "version": "0.0.2",
   "description": "a simple extension to remind you that you're getting distracted",
   "author": "vybhavab",
   "scripts": {
