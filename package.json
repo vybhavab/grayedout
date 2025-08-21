@@ -1,31 +1,40 @@
 {
-	"name": "grayout-extension",
-	"private": true,
-	"version": "0.1.0",
-	"type": "module",
-	"scripts": {
-		"dev": "vite",
-		"lint": "biome check",
-		"lint:fix": "biome format --write",
-		"build": "vite build",
-		"preview": "vite preview"
-	},
-	"dependencies": {
-		"react": "^18.3.1",
-		"react-dom": "^18.3.1"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "2.2.0",
-		"@crxjs/vite-plugin": "^2.0.0",
-		"@types/chrome": "^0.0.258",
-		"@types/react": "^18.3.3",
-		"@types/react-dom": "^18.3.0",
-		"@vitejs/plugin-react": "^4.3.1",
-		"autoprefixer": "^10.4.20",
-		"postcss": "^8.4.47",
-		"tailwindcss": "^3.4.10",
-		"typescript": "^5.5.4",
-		"vite": "^5.4.2",
-		"vite-plugin-zip-pack": "^1.2.4"
-	}
+  "name": "grayed-out",
+  "displayName": "Grayed out",
+  "version": "0.0.1",
+  "description": "a simple extension to remind you that you're getting distracted",
+  "author": "vybhavab",
+  "scripts": {
+    "dev": "plasmo dev",
+    "build": "plasmo build",
+    "package": "plasmo package"
+  },
+  "dependencies": {
+    "plasmo": "0.90.5",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "4.1.1",
+    "@types/chrome": "0.0.258",
+    "@types/node": "20.11.5",
+    "@types/react": "18.2.48",
+    "@types/react-dom": "18.2.18",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "prettier": "3.2.4",
+    "tailwindcss": "^3.4.17",
+    "typescript": "5.3.3"
+  },
+  "manifest": {
+    "permissions": [
+      "alarms",
+      "storage",
+      "scripting",
+      "tabs"
+    ],
+    "host_permissions": [
+      "https://*/*"
+    ]
+  }
 }
