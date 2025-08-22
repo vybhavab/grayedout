@@ -81,15 +81,16 @@ Follow these step-by-step instructions to build the extension for production:
    This generates the Firefox build in the `build/firefox-mv3` directory.
 
 **Build for both browsers**:
-
-    ```bash
+```bash
     pnpm build
-    ```
+```
 
 **Package the extension** (optional, for distribution):
-    ```bash
+```bash
     pnpm package
-    ```
+```
+
    This creates packaged versions ready for upload.
+
 
 The production bundles will be in the `build/` directory, ready to be zipped and published to browser extension stores.
