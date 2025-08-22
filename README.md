@@ -93,7 +93,3 @@ Follow these step-by-step instructions to build the extension for production:
    This creates packaged versions ready for upload.
 
 The production bundles will be in the `build/` directory, ready to be zipped and published to browser extension stores.
-
-## Submit to the Webstores
-
-The easiest way to deploy your Plasmo extension is to use the built-in [bpp](https://bpp.browser.market) GitHub action. Prior to using this action, make sure to build your extension and upload the first version to the store to establish the basic credentials. Then, simply follow [this setup instruction](https://docs.plasmo.com/framework/workflows/submit) and you should be on your way for automated submission!
