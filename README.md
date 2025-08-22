@@ -1,33 +1,100 @@
-This is a [Plasmo extension](https://docs.plasmo.com/) project bootstrapped with [`plasmo init`](https://www.npmjs.com/package/plasmo).
+# Grayed Out Extension
+
+This is a [Plasmo extension](https://docs.plasmo.com/) project bootstrapped with [`plasmo init`](https://www.npmjs.com/package/plasmo). It's a simple extension to remind you that you're getting distracted.
+
+## Prerequisites
+
+- **Node.js**: Version 18.0.0 or higher (recommended: 20.x for compatibility with dependencies)
+- **pnpm**: Version 8.0.0 or higher (preferred package manager)
+- **Operating System**: macOS, Windows, or Linux
+- **Build Environment**: Ensure you have a modern web browser (e.g., Chrome or Firefox) for testing the extension
+
+Install Node.js from [nodejs.org](https://nodejs.org/) and pnpm via `npm install -g pnpm` or follow the [pnpm installation guide](https://pnpm.io/installation).
 
 ## Getting Started
 
-First, run the development server:
+1. **Clone the repository**:
 
-```bash
-pnpm dev
-# or
-npm run dev
-```
+   ```bash
+   git clone https://github.com/vybhavab/grayedout.git
+   cd grayedout
+   ```
 
-Open your browser and load the appropriate development build. For example, if you are developing for the chrome browser, using manifest v3, use: `build/chrome-mv3-dev`.
+2. **Install dependencies**:
 
-You can start editing the popup by modifying `popup.tsx`. It should auto-update as you make changes. To add an options page, simply add a `options.tsx` file to the root of the project, with a react component default exported. Likewise to add a content page, add a `content.ts` file to the root of the project, importing some module and do some logic, then reload the extension on your browser.
+   ```bash
+   pnpm i
+   ```
 
-For further guidance, [visit our Documentation](https://docs.plasmo.com/)
+3. **Run the development server**:
 
-## Making production build
+   ```bash
+   pnpm dev
+   ```
 
-Run the following:
+   Alternatively, use `npm run dev` if not using pnpm.
 
-```bash
-pnpm build
-# or
-npm run build
-```
+4. **Load the extension in your browser**:
 
-This should create a production bundle for your extension, ready to be zipped and published to the stores.
+   - Open your browser and navigate to the extensions page (e.g., `chrome://extensions/` for Chrome).
+   - Enable "Developer mode" and load the unpacked extension from the `build/chrome-mv3-dev` directory.
+   - For Firefox, use `build/firefox-mv3-dev`.
 
-## Submit to the webstores
+5. **Start editing**:
+   - Modify `popup.tsx` for the popup interface. Changes auto-update.
+   - Add an options page by creating `options.tsx` with a default exported React component.
+   - Add a content script by creating `content.ts` and reloading the extension.
 
-The easiest way to deploy your Plasmo extension is to use the built-in [bpp](https://bpp.browser.market) GitHub action. Prior to using this action however, make sure to build your extension and upload the first version to the store to establish the basic credentials. Then, simply follow [this setup instruction](https://docs.plasmo.com/framework/workflows/submit) and you should be on your way for automated submission!
+For further guidance, [visit the Plasmo Documentation](https://docs.plasmo.com/).
+
+## Building the Project
+
+Follow these step-by-step instructions to build the extension for production:
+
+**Ensure dependencies are installed**:
+
+   ```bash
+   pnpm install
+   ```
+
+**Build for all targers**:
+
+   ```bash
+   pnpm export
+   ```
+
+   This generates the builds in the `build` directory for chrome and firefox with manifest-v3 format.
+
+**Build for Chrome**:
+
+   ```bash
+   pnpm build:chrome
+   ```
+
+   This generates the Chrome build in the `build/chrome-mv3` directory.
+
+**Build for Firefox**
+
+    ```bash
+        pnpm build:firefox
+    ```
+
+    This generates the Firefox build in the `build/firefox-mv3` directory.
+
+**Build for both browsers**:
+
+    ```bash
+    pnpm build
+    ```
+
+**Package the extension** (optional, for distribution):
+    ```bash
+    pnpm package
+    ```
+   This creates packaged versions ready for upload.
+
+The production bundles will be in the `build/` directory, ready to be zipped and published to browser extension stores.
+
+## Submit to the Webstores
+
+The easiest way to deploy your Plasmo extension is to use the built-in [bpp](https://bpp.browser.market) GitHub action. Prior to using this action, make sure to build your extension and upload the first version to the store to establish the basic credentials. Then, simply follow [this setup instruction](https://docs.plasmo.com/framework/workflows/submit) and you should be on your way for automated submission!

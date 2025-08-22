@@ -1,13 +1,18 @@
 {
   "name": "grayed-out",
   "displayName": "Grayed out",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "a simple extension to remind you that you're getting distracted",
   "author": "vybhavab",
   "scripts": {
     "dev": "plasmo dev",
-    "build": "plasmo build",
-    "package": "plasmo package"
+    "build:chrome": "plasmo build",
+    "build:firefox": "plasmo build --target=firefox-mv3",
+    "package:chrome": "plasmo package",
+    "package:firefox": "plasmo package --target=firefox-mv3",
+    "build": "pnpm build:chrome && pnpm build:firefox",
+    "package": "pnpm package:chrome && pnpm package:firefox",
+    "export": "pnpm build && pnpm package"
   },
   "dependencies": {
     "plasmo": "0.90.5",
@@ -27,6 +32,12 @@
     "typescript": "5.3.3"
   },
   "manifest": {
+    "key": "$CRX_KEY",
+    "browser_specific_settings": {
+      "gecko": {
+        "id": "@grayedout.vybhavab.com"
+      }
+    },
     "permissions": [
       "alarms",
       "storage",
