@@ -73,13 +73,12 @@ Follow these step-by-step instructions to build the extension for production:
 
    This generates the Chrome build in the `build/chrome-mv3` directory.
 
-**Build for Firefox**
+**Build for Firefox**:
+   ```bash
+      pnpm build:firefox
+   ```
 
-    ```bash
-        pnpm build:firefox
-    ```
-
-    This generates the Firefox build in the `build/firefox-mv3` directory.
+   This generates the Firefox build in the `build/firefox-mv3` directory.
 
 **Build for both browsers**:
 
