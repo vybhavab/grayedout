@@ -51,46 +51,43 @@ For further guidance, [visit the Plasmo Documentation](https://docs.plasmo.com/)
 
 Follow these step-by-step instructions to build the extension for production:
 
-**Ensure dependencies are installed**:
+### Ensure dependencies are installed**:
 
    ```bash
    pnpm install
    ```
 
-**Build for all targers**:
-
-   ```bash
-   pnpm export
-   ```
-
-   This generates the builds in the `build` directory for chrome and firefox with manifest-v3 format.
-
-**Build for Chrome**:
-
-   ```bash
-   pnpm build:chrome
-   ```
-
-   This generates the Chrome build in the `build/chrome-mv3` directory.
-
-**Build for Firefox**:
-   ```bash
-      pnpm build:firefox
-   ```
-
-   This generates the Firefox build in the `build/firefox-mv3` directory.
-
-**Build for both browsers**:
+### Build for all targers
 ```bash
-    pnpm build
+pnpm export
 ```
 
-**Package the extension** (optional, for distribution):
+This generates the builds in the `build` directory for chrome and firefox with manifest-v3 format.
+
+### Build for Chrome
 ```bash
-    pnpm package
+pnpm build:chrome
 ```
 
-   This creates packaged versions ready for upload.
+This generates the Chrome build in the `build/chrome-mv3` directory.
 
+### Build for Firefox
+```bash
+pnpm build:firefox
+```
+
+This generates the Firefox build in the `build/firefox-mv3` directory.
+
+### Build for both browsers
+```bash
+pnpm build
+```
+
+### Package the extension
+```bash
+pnpm package
+```
+
+This creates packaged versions ready for upload.
 
 The production bundles will be in the `build/` directory, ready to be zipped and published to browser extension stores.
